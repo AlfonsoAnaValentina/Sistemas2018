@@ -1,69 +1,88 @@
 #include <stdio.h>
+#include <time.h>
 #include <stdlib.h>
 #include <string.h>
 
 
 const int filas=5;
 const int columnas=5;
+const int barcos=5;
 
-int cargaMatrizPalabras(char matChar[][columnas], int filas);
-void muestraMatrizPalabras(char matChar[][columnas], int cantPalabras);
-int buscaPalabra(char matChar[][columnas], int validos, char palabraBuscada[]);
+
+void cargaMatrizPalabras(int tablero[][columnas], int barcos);
+void muestraMatrizPalabras(int tablero[][columnas], int barcos);
+void muestraMatrizEnteros(int tablero[][columnas], int filas, int columnas);
+//int buscaPalabra(int matChar[][columnas], int validos, char palabraBuscada[]);
 
 int main (void)
 {
-
-
   getchar( );
-  int cantPalabras;
-  char matrizPalabras[filas][columnas];
-  cantPalabras=cargaMatrizPalabras(matrizPalabras, filas);
-  muestraMatrizPalabras(matrizPalabras, cantPalabras);
+  int tablero[filas][columnas];
+  cargaMatrizPalabras(tablero, barcos);
+  muestraMatrizEnteros(tablero, filas, columnas);
   return 0;
 }
 
-int cargaMatrizPalabras(char matChar[][columnas], int filas)
+void cargaMatrizPalabras(int tablero[][columnas], int barcos)
 {
     int i=0;
-    char c='s';
-    while((i<filas)&&(c=='s'))
+    while((i<barcos))
     {
-        printf("Ingrese la palabra a cargar\n");
-        fflush(stdin);
-        matChar[i][1]=getchar( );
+        srand(time(NULL));
+        int fila = rand() % 4;
+        int columna = rand() % 4;
+        tablero[fila][columna]=1;
         i++;
-        printf("Cargar otra palabra? s/n\n");
-        fflush(stdin);
-        scanf("%c", &c);
     }
-    if(i>=filas)
-        printf("Se alcanzó el máximo de palabras\n");
-    return i;
 }
 
-void muestraMatrizPalabras(char matChar[][columnas],int validos)
+void muestraMatrizPalabras(char tablero[][columnas],int validos)
 {
     int i=0;
-    while(i<validos)
-    {
+    for (size_t j = 0; j < validos; j++) {
+      for (size_t k = 0; k < validos; k++) {
         printf("%s\n", matChar[i]);
+      }
+    }
+}
+
+void muestraMatrizEnteros(int tablero[][columnas], int filas, int columnas)
+{
+    int i=0, j;
+    while(i<filas)
+    {
+        j=0;
+        while(j<columnas)
+        {
+            if (tablero[i][j]<10)
+            {
+                printf("[0%d]", tablero[i][j]);
+            }
+            else
+            {
+                printf("[%d]", tablero[i][j]);
+            }
+            j++;
+        }
+        printf("\n");
         i++;
     }
 }
 
-int buscaPalabra(char matChar[][columnas], int validos, char palabraBuscada[])
-{
-    int i=0, esta=0;
-    while((i<validos)&&(esta==0))
-    {
-        if(strcmp(matChar[i], palabraBuscada)==0)
-        {
-            esta=1;
-        }
-        else
-        {
-            i++;
-        }
-    }
-    return esta;
-}
+//
+// int buscaPalabra(char matChar[][columnas], int validos, char palabraBuscada[])
+// {
+//     int i=0, esta=0;
+//     while((i<validos)&&(esta==0))
+//     {
+//         if(strcmp(matChar[i], palabraBuscada)==0)
+//         {
+//             esta=1;
+//         }
+//         else
+//         {
+//             i++;
+//         }
+//     }
+//     return esta;
+// }
