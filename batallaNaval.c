@@ -12,7 +12,8 @@ const int barcos=5;
 void cargaMatrizPalabras(int tablero[][columnas], int barcos);
 void muestraMatrizPalabras(int tablero[][columnas], int barcos);
 void muestraMatrizEnteros(int tablero[][columnas], int filas, int columnas);
-//int buscaPalabra(int matChar[][columnas], int validos, char palabraBuscada[]);
+int eliminarBarco(int tablero[][columnas], int filas, int columnas);
+int buscarBarco(int tablero[][columnas]);
 
 int main (void)
 {
@@ -20,29 +21,33 @@ int main (void)
   int tablero[filas][columnas];
   cargaMatrizPalabras(tablero, barcos);
   muestraMatrizEnteros(tablero, filas, columnas);
+  buscarBarco(tablero);
   return 0;
 }
 
 void cargaMatrizPalabras(int tablero[][columnas], int barcos)
 {
-    int i=0;
-    while((i<barcos))
-    {
-        srand(time(NULL));
-        int fila = rand() % 4;
-        int columna = rand() % 4;
-        tablero[fila][columna]=1;
-        i++;
-    }
-}
 
-void muestraMatrizPalabras(char tablero[][columnas],int validos)
-{
-    int i=0;
-    for (size_t j = 0; j < validos; j++) {
-      for (size_t k = 0; k < validos; k++) {
-        printf("%s\n", matChar[i]);
+  int i=0, j;
+  while(i<filas){
+      j=0;
+      while(j<columnas){
+          tablero[i][j]=0;
+          j++;
       }
+      i++;
+  }
+    i=0;
+    srand(time(NULL));
+
+    while(i<barcos)
+    {
+        int fila = rand() % 5;
+        int columna = rand() % 5;
+        if (tablero[fila][columna] == 0) {
+          tablero[fila][columna]=1;
+          i++;
+        }
     }
 }
 
@@ -56,7 +61,7 @@ void muestraMatrizEnteros(int tablero[][columnas], int filas, int columnas)
         {
             if (tablero[i][j]<10)
             {
-                printf("[0%d]", tablero[i][j]);
+                printf("[%d]", tablero[i][j]);
             }
             else
             {
@@ -69,20 +74,41 @@ void muestraMatrizEnteros(int tablero[][columnas], int filas, int columnas)
     }
 }
 
-//
-// int buscaPalabra(char matChar[][columnas], int validos, char palabraBuscada[])
-// {
-//     int i=0, esta=0;
-//     while((i<validos)&&(esta==0))
-//     {
-//         if(strcmp(matChar[i], palabraBuscada)==0)
-//         {
-//             esta=1;
-//         }
-//         else
-//         {
-//             i++;
-//         }
-//     }
-//     return esta;
-// }
+
+int buscarBarco(int tablero[][columnas])
+{
+  char filaChar, columnaChar;
+  int barcosRestantes = barcos;
+  while (barcosRestantes > 0) {
+    printf("Ingrese una fila del 1 al 5 \n");
+    scanf("%c", &filaChar);
+    int filaIndex = (int)filaChar;
+    filaIndex = filaIndex - 48;
+    if (filaIndex < 0 && filaIndex > barcos) {
+      printf("Numero invalido \n");
+    } else {
+      printf("Ingrese una columna de la A a la E \n");
+      scanf("%c", &columnaChar);
+      int columnaIndex = (int)columnaChar;
+      columnaIndex = columnaIndex - 64;
+      if (columnaIndex < 0 && columnaIndex > barcos) {
+        printf("Letra invalida, deben ser en mayusculas \n");
+      } else {
+        int eliminado = eliminarBarco(tablero, filaIndex, columnaIndex);
+        if (eliminado == 1) {
+          barcosRestantes = barcosRestantes - 1;
+        }
+      }
+    }
+  }
+  return 1;
+}
+int eliminarBarco(int tablero[][columnas], int fila, int columna ) {
+  if (tablero[fila][columna] == 1) {
+    printf("Enhorabuena has hundido un barco :) \n");
+    return 1;
+  } else {
+    printf("Agua!! Vuelve a intentarlo \n");
+  }
+  return 0;
+}
